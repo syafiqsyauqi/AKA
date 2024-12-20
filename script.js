@@ -27,26 +27,29 @@ function addActivity() {
     document.getElementById('end').value = '';
 }
 
-// Algoritma Iteratif
 function jadwalIteratif(activities) {
     activities.sort((a, b) => a.end - b.end);
     let schedule = [];
+    let conflicts = []; // Untuk menyimpan aktivitas yang bentrok
     let lastEnd = 0;
 
     for (const activity of activities) {
         if (activity.start >= lastEnd) {
             schedule.push(activity);
             lastEnd = activity.end;
+        } else {
+            conflicts.push(activity); // Simpan aktivitas bentrok
         }
     }
 
-    return schedule;
+    // Kembalikan jadwal dan konflik
+    return { schedule, conflicts };
 }
 
-// Algoritma Rekursif
-function jadwalRekursif(activities, lastEnd = 0, index = 0) {
+
+function jadwalRekursif(activities, lastEnd = 0, index = 0, conflicts = []) {
     if (index >= activities.length) {
-        return [];
+        return { schedule: [], conflicts }; // Kembalikan jadwal dan konflik
     }
 
     if (index === 0) {
@@ -56,16 +59,22 @@ function jadwalRekursif(activities, lastEnd = 0, index = 0) {
     const currentActivity = activities[index];
 
     if (currentActivity.start >= lastEnd) {
-        return [currentActivity].concat(
-            jadwalRekursif(activities, currentActivity.end, index + 1)
-        );
+        const next = jadwalRekursif(activities, currentActivity.end, index + 1, conflicts);
+        return {
+            schedule: [currentActivity].concat(next.schedule),
+            conflicts: next.conflicts,
+        };
+    } else {
+        conflicts.push(currentActivity); // Simpan aktivitas bentrok
+        return jadwalRekursif(activities, lastEnd, index + 1, conflicts);
     }
-
-    return jadwalRekursif(activities, lastEnd, index + 1);
 }
 
-// Visualisasi hasil jadwal dengan Chart.js
-function visualize(schedule, method) {
+
+function visualize(scheduleResult, method) {
+    const { schedule, conflicts } = scheduleResult;
+
+    // Visualisasi jadwal optimal
     const labels = schedule.map((activity) => activity.kelas);
     const data = schedule.map((activity) => [activity.start, activity.end]);
 
@@ -100,19 +109,34 @@ function visualize(schedule, method) {
 
     // Tampilkan pesan metode yang digunakan
     const processMessage = document.getElementById('processMessage');
-    processMessage.innerHTML = `Proses menggunakan metode: <span style="color: green;">${method}</span>`;
+    processMessage.innerHTML = `
+        Proses menggunakan metode: <span style="color: green;">${method}</span><br>
+        Jumlah aktivitas berhasil dijadwalkan: <span style="color: blue;">${schedule.length}</span><br>
+        Jumlah aktivitas bentrok: <span style="color: red;">${conflicts.length}</span>
+    `;
+
+    // Log aktivitas bentrok
+    if (conflicts.length > 0) {
+        console.log("Aktivitas Bentrok:");
+        conflicts.forEach((conflict) => {
+            console.log(`${conflict.kelas} (${conflict.start}-${conflict.end})`);
+        });
+    } else {
+        console.log("Tidak ada aktivitas yang bentrok.");
+    }
 }
 
-// Proses Iteratif
+
 function scheduleIterative() {
-    const schedule = jadwalIteratif(activities);
-    console.log("Jadwal Iteratif:", schedule);
-    visualize(schedule, "Iteratif");
+    const result = jadwalIteratif(activities);
+    console.log("Hasil Iteratif:", result);
+    visualize(result, "Iteratif");
 }
 
-// Proses Rekursif
+
 function scheduleRecursive() {
-    const schedule = jadwalRekursif(activities);
-    console.log("Jadwal Rekursif:", schedule);
-    visualize(schedule, "Rekursif");
+    const result = jadwalRekursif(activities);
+    console.log("Hasil Rekursif:", result);
+    visualize(result, "Rekursif");
 }
+
