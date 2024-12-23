@@ -4,6 +4,7 @@ Tubes AKA "Analisis Kompleksitas Algoritma Greedy pada Permasalahan Penjadwalan 
 Anggota :
 
 Dennis Havinanda - 103012480022
+
 Muhammad Syfiq Syauqi Ramadhan - 103012480030
 
 Penjelasan Singkat Program :
