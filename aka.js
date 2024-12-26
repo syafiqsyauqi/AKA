@@ -58,5 +58,19 @@ function benchmarkAlgorithms() {
     });
 }
 
+// Contoh data aktivitas (start_time, finish_time)
+const activities = [
+    [1, 2],
+    [3, 4],
+    [0, 6],
+    [5, 7],
+    [8, 9],
+    [5, 9]
+];
+
+
+console.log("Greedy Iteratif:", greedyActivitySelectionIterative(activities));
+console.log("Greedy Rekursif:", greedyActivitySelectionRecursive(activities));
+
 // Jalankan benchmark
 benchmarkAlgorithms();
