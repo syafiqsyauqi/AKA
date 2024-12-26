@@ -40,36 +40,31 @@ const activities = [
 console.log("Greedy Iteratif:", greedyActivitySelectionIterative(activities));
 console.log("Greedy Rekursif:", greedyActivitySelectionRecursive(activities));
 
-// Fungsi untuk menghasilkan aktivitas acak
-function generateRandomActivities(n) {
+// Fungsi untuk menghasilkan data aktivitas acak
+function generateRandomActivities(num) {
     const activities = [];
-    for (let i = 0; i < n; i++) {
-        const start = Math.floor(Math.random() * 1000); // Waktu mulai acak (0-999)
-        const end = start + Math.floor(Math.random() * 100) + 1; // Waktu selesai (start+1 hingga start+100)
-        activities.push([start, end]);
+    for (let i = 0; i < num; i++) {
+        const start = Math.floor(Math.random() * 100);
+        const finish = start + Math.floor(Math.random() * 10) + 1;
+        activities.push([start, finish]);
     }
     return activities;
 }
 
-// Benchmark algoritma menggunakan console.time
-function benchmarkAlgorithms() {
-    const testSizes = [10, 100, 300, 500, 1000]; // Ukuran dataset untuk diuji
+// Testing running time dengan berbagai ukuran input
+const testSizes = [10, 100, 300, 500, 1000, 2000, 3000];
+testSizes.forEach(size => {
+    const testActivities = generateRandomActivities(size);
 
-    console.log("Benchmark Results:");
-    testSizes.forEach((n) => {
-        const testActivities = generateRandomActivities(n);
+    console.log(`\nInput Size: ${size}`);
 
-        // Iterative method
-        console.time(`Iterative (n=${n})`); // Gunakan string template yang benar
-        greedyActivitySelectionIterative([...testActivities]);
-        console.timeEnd(`Iterative (n=${n})`);
+    // Test Iteratif
+    console.time("Iterative Time");
+    greedyActivitySelectionIterative([...testActivities]);
+    console.timeEnd("Iterative Time");
 
-        // Recursive method
-        console.time(`Recursive (n=${n})`); // Gunakan string template yang benar
-        greedyActivitySelectionRecursive([...testActivities]);
-        console.timeEnd(`Recursive (n=${n})`);
-    });
-}
-
-// Jalankan benchmark
-benchmarkAlgorithms();
+    // Test Rekursif
+    console.time("Recursive Time");
+    greedyActivitySelectionRecursive([...testActivities].sort((a, b) => a[1] - b[1])); // Urutkan untuk rekursif
+    console.timeEnd("Recursive Time");
+});
