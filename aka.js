@@ -27,6 +27,19 @@ function greedyActivitySelectionIterative(activities) {
     return selectedActivities;
 }
 
+// Contoh data aktivitas (start_time, finish_time)
+const activities = [
+    [1, 2],
+    [3, 4],
+    [0, 6],
+    [5, 7],
+    [8, 9],
+    [5, 9]
+];
+
+console.log("Greedy Iteratif:", greedyActivitySelectionIterative(activities));
+console.log("Greedy Rekursif:", greedyActivitySelectionRecursive(activities));
+
 // Fungsi untuk menghasilkan aktivitas acak
 function generateRandomActivities(n) {
     const activities = [];
@@ -47,30 +60,16 @@ function benchmarkAlgorithms() {
         const testActivities = generateRandomActivities(n);
 
         // Iterative method
-        console.time(`Iterative (n=${n})`);
+        console.time(`Iterative (n=${n})`); // Gunakan string template yang benar
         greedyActivitySelectionIterative([...testActivities]);
         console.timeEnd(`Iterative (n=${n})`);
 
         // Recursive method
-        console.time(`Recursive (n=${n})`);
+        console.time(`Recursive (n=${n})`); // Gunakan string template yang benar
         greedyActivitySelectionRecursive([...testActivities]);
         console.timeEnd(`Recursive (n=${n})`);
     });
 }
-
-// Contoh data aktivitas (start_time, finish_time)
-const activities = [
-    [1, 2],
-    [3, 4],
-    [0, 6],
-    [5, 7],
-    [8, 9],
-    [5, 9]
-];
-
-
-console.log("Greedy Iteratif:", greedyActivitySelectionIterative(activities));
-console.log("Greedy Rekursif:", greedyActivitySelectionRecursive(activities));
 
 // Jalankan benchmark
 benchmarkAlgorithms();
